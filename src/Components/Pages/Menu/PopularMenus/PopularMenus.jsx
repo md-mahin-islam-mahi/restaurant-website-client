@@ -1,7 +1,7 @@
 import React from 'react';
 import useSWR from 'swr';
 import MenuItems from '../../../Shared/MenuItems/MenuItems';
-import PageHeader from '../../../Global/Spinner/PageHeader';
+import PageHeader from '../../../Global/PageHeader';
 
 const PopularMenus = () => {
     const fetcher = async (...args) => {
@@ -9,7 +9,7 @@ const PopularMenus = () => {
         const data = await res.json();
         return data;
     }
-    const { data, error } = useSWR('http://localhost:4000/menus',
+    const { data, error } = useSWR('https://restaurant-website-server-lovat.vercel.app/menus',
         fetcher, {
         suspense: true
     }

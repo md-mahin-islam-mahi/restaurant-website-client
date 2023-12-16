@@ -2,21 +2,26 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { Pagination } from 'swiper/modules';
-
-import img1 from '../../../assets/home/slide1.jpg'
-import img2 from '../../../assets/home/slide2.jpg'
-import img3 from '../../../assets/home/slide3.jpg'
-import img4 from '../../../assets/home/slide4.jpg'
-import PageHeader from '../../Global/Spinner/PageHeader';
+import PageHeader from '../../Global/PageHeader';
+import useSWR from 'swr';
+import { fetcher } from '../../Global/Fetcher';
 
 const Swipper = () => {
 
+    const { data: swippers, error } = useSWR("https://restaurant-website-server-lovat.vercel.app/swippes", fetcher,{
+        suspense:true
+    })
+
+    if (error) {
+        return <h1>Could not reach the server</h1>;
+    }
+
     return (
         <section>
-            <PageHeader 
+            <PageHeader
                 subHeader={"From 11:00am to 10:00pm"}
                 header={"order online"}
-             />
+            />
             <Swiper
                 slidesPerView={4}
                 spaceBetween={30}
@@ -26,35 +31,13 @@ const Swipper = () => {
                 modules={[Pagination]}
                 className="mySwiper py-5 pb-20"
             >
-                <SwiperSlide>
-                    <img src={img1} alt="" />
-                    <h1 className='text-[40px] font-bold -mt-20 text-white shadow-md'>SALAD</h1>
-                </SwiperSlide>
-                <SwiperSlide>
-                    <img src={img2} alt="" />
-                    <h1 className='text-[40px] font-bold -mt-20 text-white shadow-md'>PIZZA</h1>
-                </SwiperSlide>
-                <SwiperSlide>
-                    <img src={img3} alt="" />
-                    <h1 className='text-[40px] font-bold -mt-20 text-white shadow-md'>SOUPE</h1>
-                </SwiperSlide>
-                <SwiperSlide>
-                    <img src={img4} alt="" />
-                    <h1 className='text-[40px] font-bold -mt-20 text-white shadow-md'>DESERT</h1>
-                </SwiperSlide>
-
-                <SwiperSlide>
-                    <img src={img1} alt="" />
-                    <h1 className='text-[40px] font-bold -mt-20 text-white shadow-md'>SALAD</h1>
-                </SwiperSlide>
-                <SwiperSlide>
-                    <img src={img2} alt="" />
-                    <h1 className='text-[40px] font-bold -mt-20 text-white shadow-md'>PIZZA</h1>
-                </SwiperSlide>
-                <SwiperSlide>
-                    <img src={img3} alt="" />
-                    <h1 className='text-[40px] font-bold -mt-20 text-white shadow-md'>SOUPE</h1>
-                </SwiperSlide>
+                {
+                    swippers.map(swipper => 
+                        <SwiperSlide key={swipper._id}>
+                            <img src={swipper.img} alt="" />
+                            <h1 className='text-[40px] font-bold -mt-20 text-white shadow-md'>{swipper.name}</h1>
+                        </SwiperSlide>)
+                }
             </Swiper>
         </section>
     );
